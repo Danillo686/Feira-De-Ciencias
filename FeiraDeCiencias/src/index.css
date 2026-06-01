@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-slate-800 font-sans overflow-x-hidden;
+  }
+}
+
+/* Custom Scrollbar for a futuristic look */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.glass-panel {
+  @apply bg-white border border-slate-200 rounded-2xl shadow-sm;
+}
+
+.text-gradient {
+  @apply text-primary font-bold;
+}
+
+.neon-border {
+  @apply border border-primary/20 shadow-md;
+}
+
+.neon-text {
+  @apply font-bold text-primary;
+}
