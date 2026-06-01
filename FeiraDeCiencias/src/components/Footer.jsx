@@ -1,6 +1,6 @@
 import { playClickSound } from "../utils/sounds";
 
-const Footer = ({ onStartQuiz }) => {
+const Footer = ({ onStartGames }) => {
   return (
     <footer className="bg-slate-100 border-t border-slate-200 pt-16 pb-8 px-6 relative z-10">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-10">
@@ -22,11 +22,11 @@ const Footer = ({ onStartQuiz }) => {
           <button 
             onClick={() => {
               playClickSound();
-              onStartQuiz();
+              onStartGames();
             }}
-            className="px-8 py-4 rounded-xl bg-primary hover:bg-primary/90 transition-all font-bold text-xl shadow-md text-white animate-pulse"
+            className="px-8 py-3 rounded-lg bg-primary hover:bg-primary/90 transition-all font-bold text-lg shadow-md text-white"
           >
-            Ir para o Quiz
+            Acessar Jogos Interativos
           </button>
         </div>
       </div>

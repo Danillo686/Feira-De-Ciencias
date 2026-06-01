@@ -1,75 +1,76 @@
 import { motion } from "framer-motion";
 
 const timelineEvents = [
-  { year: "Hoje", title: "IA Generativa", desc: "Criação de textos, imagens e códigos quase instantaneamente." },
-  { year: "2026", title: "Assistentes Pessoais Avançados", desc: "IAs que agem como tutores, médicos e conselheiros 24h." },
-  { year: "2030", title: "Automação Física", desc: "Robôs humanoides realizando tarefas domésticas e perigosas." },
-  { year: "Futuro", title: "AGI (IA Geral)", desc: "Uma inteligência artificial capaz de aprender qualquer tarefa intelectual que um humano pode." },
+  { year: "Curto Prazo", title: "Integração Multimodal", desc: "Modelos capazes de processar e relacionar texto, áudio, vídeo e dados sensoriais em tempo real, tornando interações homem-máquina quase indistinguíveis do diálogo natural." },
+  { year: "Médio Prazo", title: "Agentes Autônomos", desc: "Sistemas capazes de não apenas responder, mas planejar, orquestrar e executar fluxos de trabalho complexos, negociando entre si para resolver problemas logísticos e científicos." },
+  { year: "Longo Prazo", title: "Simbiose Humano-Máquina", desc: "Avanços em interfaces cérebro-computador (BCIs) permitindo comunicação direta, levantando debates profundos sobre a redefinição da cognição e identidade humana." },
+  { year: "Especulativo", title: "Inteligência Artificial Geral (AGI)", desc: "A emergência de sistemas com capacidade de aprendizado e generalização superior à inteligência humana em qualquer domínio cognitivo." },
 ];
 
 const FutureTimelineSection = () => {
   return (
-    <section className="py-24 px-6 relative z-10 overflow-hidden">
-      <div className="max-w-4xl mx-auto relative">
+    <section className="py-24 px-6 relative z-10 bg-white">
+      <div className="max-w-5xl mx-auto relative">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-800">
-            O <span className="text-primary font-bold">Futuro</span> da IA
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 tracking-tight">
+            Projeções para o <span className="text-primary">Futuro</span>
           </h2>
-          <p className="text-xl text-slate-600">O que nos aguarda nos próximos anos?</p>
+          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            As trajetórias prováveis da evolução da Inteligência Artificial e seus possíveis pontos de inflexão tecnológica.
+          </p>
         </motion.div>
 
         <div className="relative">
           {/* Linha central */}
-          <div className="absolute left-[50%] top-0 bottom-0 w-1 bg-gradient-to-b from-primary to-transparent -translate-x-[50%] opacity-20"></div>
-          <div className="absolute left-[50%] top-0 bottom-0 w-[2px] bg-slate-300 -translate-x-[50%]"></div>
+          <div className="hidden md:block absolute left-[50%] top-0 bottom-0 w-[2px] bg-slate-200 -translate-x-[50%]"></div>
 
-          <div className="space-y-16">
+          <div className="space-y-12 md:space-y-20">
             {timelineEvents.map((event, index) => {
               const isEven = index % 2 === 0;
               return (
-                <div key={index} className="relative flex items-center justify-between w-full">
-                  {/* Ponto na linha */}
+                <div key={index} className="relative flex flex-col md:flex-row items-center justify-between w-full">
+                  {/* Ponto na linha (desktop) */}
                   <motion.div 
                     initial={{ scale: 0 }}
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
-                    className="absolute left-[50%] w-6 h-6 rounded-full bg-white border-4 border-primary -translate-x-[50%] z-10 shadow-sm"
+                    className="hidden md:block absolute left-[50%] w-5 h-5 rounded-full bg-white border-[3px] border-primary -translate-x-[50%] z-10 shadow-sm"
                   ></motion.div>
 
                   {/* Conteúdo Esquerda */}
-                  <div className={`w-5/12 ${isEven ? 'text-right pr-8' : 'opacity-0'}`}>
-                    {isEven && (
+                  <div className={`w-full md:w-[45%] mb-8 md:mb-0 ${isEven ? 'md:text-right md:pr-8' : 'md:opacity-0 md:order-last'}`}>
+                    {(!isEven ? 'block md:hidden' : 'block') && (
                       <motion.div
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="glass-panel p-6"
+                        className="bg-white formal-border p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow"
                       >
-                        <h3 className="text-3xl font-bold text-primary mb-2">{event.year}</h3>
-                        <h4 className="text-xl font-semibold text-slate-800 mb-2">{event.title}</h4>
-                        <p className="text-slate-600 font-medium">{event.desc}</p>
+                        <h3 className="text-sm font-bold text-accent uppercase tracking-widest mb-3">{event.year}</h3>
+                        <h4 className="text-2xl font-bold text-slate-900 mb-4">{event.title}</h4>
+                        <p className="text-slate-600 leading-relaxed">{event.desc}</p>
                       </motion.div>
                     )}
                   </div>
 
                   {/* Conteúdo Direita */}
-                  <div className={`w-5/12 ${!isEven ? 'text-left pl-8' : 'opacity-0'}`}>
+                  <div className={`w-full md:w-[45%] ${!isEven ? 'md:text-left md:pl-8' : 'md:opacity-0 md:hidden'}`}>
                     {!isEven && (
                       <motion.div
-                        initial={{ opacity: 0, x: 50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="glass-panel p-6 border-secondary/50 shadow-[0_0_15px_rgba(188,19,254,0.1)]"
+                        className="bg-white formal-border p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow"
                       >
-                        <h3 className="text-3xl font-bold text-secondary mb-2">{event.year}</h3>
-                        <h4 className="text-xl font-semibold text-slate-800 mb-2">{event.title}</h4>
-                        <p className="text-slate-600 font-medium">{event.desc}</p>
+                        <h3 className="text-sm font-bold text-secondary uppercase tracking-widest mb-3">{event.year}</h3>
+                        <h4 className="text-2xl font-bold text-slate-900 mb-4">{event.title}</h4>
+                        <p className="text-slate-600 leading-relaxed">{event.desc}</p>
                       </motion.div>
                     )}
                   </div>

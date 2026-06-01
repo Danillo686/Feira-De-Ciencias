@@ -8,7 +8,7 @@
   }
 }
 
-/* Custom Scrollbar for a futuristic look */
+/* Custom Scrollbar for a formal look */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -18,26 +18,43 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #94a3b8;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #94a3b8;
 }
 
 .glass-panel {
-  @apply bg-white border border-slate-200 rounded-2xl shadow-sm;
+  @apply bg-white border border-slate-200 rounded-xl shadow-md;
 }
 
 .text-gradient {
   @apply text-primary font-bold;
 }
 
-.neon-border {
-  @apply border border-primary/20 shadow-md;
+.formal-border {
+  @apply border border-slate-200 shadow-sm transition-all duration-300 hover:shadow-md hover:border-accent/30;
 }
 
-.neon-text {
-  @apply font-bold text-primary;
+.formal-text {
+  @apply font-semibold text-primary;
+}
+
+/* 3D Transform Utilities for Memory Game */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
 }

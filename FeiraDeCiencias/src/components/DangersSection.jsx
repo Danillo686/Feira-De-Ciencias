@@ -2,18 +2,17 @@ import { motion } from "framer-motion";
 import { AlertTriangle, EyeOff, UserX, Cpu, Lock, Video } from "lucide-react";
 
 const dangers = [
-  { id: 1, title: "Fake News", icon: AlertTriangle, desc: "Textos gerados por IA espalhando desinformação em massa." },
-  { id: 2, title: "Deepfakes", icon: Video, desc: "Vídeos e áudios falsos muito realistas usados para golpes." },
-  { id: 3, title: "Perda de Privacidade", icon: EyeOff, desc: "Coleta excessiva de dados pessoais para treinar os modelos." },
-  { id: 4, title: "Dependência Tecnológica", icon: Cpu, desc: "Pessoas perdendo a capacidade de pensar e criar sozinhas." },
-  { id: 5, title: "Desemprego", icon: UserX, desc: "Substituição de trabalhadores humanos por sistemas automatizados." },
-  { id: 6, title: "Uso Criminoso", icon: Lock, desc: "Hackers usando IA para criar vírus mais avançados." },
+  { id: 1, title: "Desinformação Automatizada", icon: AlertTriangle, desc: "A geração de texto em larga escala facilita a criação de campanhas de desinformação altamente persuasivas, ameaçando a integridade de processos democráticos e a confiança pública." },
+  { id: 2, title: "Mídias Sintéticas (Deepfakes)", icon: Video, desc: "Avanços em IA generativa permitem a clonagem de voz e rosto com hiper-realismo, sendo frequentemente utilizados para fraudes financeiras, extorsão e difamação." },
+  { id: 3, title: "Erosão da Privacidade", icon: EyeOff, desc: "Modelos dependem de volumes colossais de dados de treinamento. A extração indiscriminada de dados pessoais levanta questões complexas sobre consentimento e vigilância algorítmica." },
+  { id: 4, title: "Vieses Algorítmicos", icon: Cpu, desc: "Se treinados com dados não representativos, algoritmos podem perpetuar ou até amplificar preconceitos históricos em decisões de crédito, recrutamento e justiça criminal." },
+  { id: 5, title: "Impactos Socioeconômicos", icon: UserX, desc: "Embora crie novos empregos, a transição é assimétrica. Profissões baseadas em tarefas previsíveis enfrentam risco iminente de obsolescência, exigindo políticas urgentes de requalificação." },
+  { id: 6, title: "Armamento Cibernético", icon: Lock, desc: "Atacantes utilizam IA para automatizar a descoberta de vulnerabilidades (zero-day), criar malwares mutantes e orquestrar ataques de phishing de alta sofisticação." },
 ];
 
 const DangersSection = () => {
   return (
-    <section className="py-24 px-6 relative z-10">
-      <div className="absolute inset-0 bg-red-50 -z-10"></div>
+    <section className="py-24 px-6 relative z-10 bg-slate-50 border-t border-slate-200">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -21,33 +20,34 @@ const DangersSection = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="text-center mb-16"
         >
-          <div className="inline-block p-4 rounded-full bg-red-100 text-red-600 mb-4">
-            <AlertTriangle size={48} />
+          <div className="inline-flex items-center justify-center p-4 rounded-full bg-rose-50 text-rose-700 mb-6 border border-rose-100">
+            <AlertTriangle size={36} />
           </div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-slate-800">
-            Os <span className="text-red-600 font-bold">Perigos</span> da IA
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 tracking-tight">
+            Desafios Éticos e <span className="text-rose-700">Riscos</span>
           </h2>
-          <p className="text-xl text-slate-600">O lado sombrio do avanço tecnológico rápido e sem regulamentação.</p>
+          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            A inovação acelerada sem diretrizes regulatórias claras apresenta vulnerabilidades sistêmicas críticas para a sociedade contemporânea.
+          </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {dangers.map((danger, index) => {
             const Icon = danger.icon;
             return (
               <motion.div
                 key={danger.id}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="bg-white border border-red-200 p-8 rounded-2xl shadow-sm hover:border-red-400 transition-colors"
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+                className="bg-white formal-border p-8 rounded-xl hover:border-rose-300 transition-colors"
               >
-                <div className="text-red-600 mb-6">
-                  <Icon size={40} />
+                <div className="text-rose-700 mb-6 bg-rose-50 inline-block p-3 rounded-lg">
+                  <Icon size={28} />
                 </div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-3">{danger.title}</h3>
-                <p className="text-slate-600 font-medium">{danger.desc}</p>
+                <h3 className="text-xl font-bold text-slate-900 mb-4">{danger.title}</h3>
+                <p className="text-slate-600 leading-relaxed text-sm">{danger.desc}</p>
               </motion.div>
             );
           })}
