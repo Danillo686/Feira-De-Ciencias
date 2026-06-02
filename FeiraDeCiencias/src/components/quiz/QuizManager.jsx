@@ -1,21 +1,23 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import LoginScreen from "./LoginScreen";
+import DifficultySelect from "./DifficultySelect";
 import Quiz from "./Quiz";
 import ResultScreen from "./ResultScreen";
 import RankingBoard from "./RankingBoard";
 import AdminPanel from "./AdminPanel";
+import { saveScore } from "../../firebase";
 
 const QuizManager = () => {
-  // states: 'login', 'playing', 'result', 'ranking'
+  // states: 'login', 'difficulty', 'playing', 'result', 'ranking'
   const [gameState, setGameState] = useState("login");
   const [userData, setUserData] = useState(null);
+  const [difficulty, setDifficulty] = useState("hard");
   const [resultData, setResultData] = useState({ score: 0, timeSpent: 0 });
   const [showAdmin, setShowAdmin] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Alt + Shift + A para abrir o admin (evita conflito com o Brave)
       if (e.altKey && e.shiftKey && e.key.toLowerCase() === 'a') {
         e.preventDefault();
         setShowAdmin(prev => !prev);
@@ -27,29 +29,27 @@ const QuizManager = () => {
 
   const handleStart = (data) => {
     setUserData(data);
+    setGameState("difficulty");
+  };
+
+  const handleSelectDifficulty = (diff) => {
+    setDifficulty(diff);
     setGameState("playing");
   };
 
-  const handleComplete = ({ score, timeSpent }) => {
+  const handleComplete = async ({ score, timeSpent }) => {
     setResultData({ score, timeSpent });
-    
-    // Salvar no ranking
-    const currentRanking = JSON.parse(localStorage.getItem("ai_quiz_ranking") || "[]");
-    
-    // Limpar flags de 'isRecent' antigas
-    const cleanedRanking = currentRanking.map(p => ({ ...p, isRecent: false }));
-    
-    const newEntry = {
+
+    // Salvar no ranking (Firebase ou localStorage)
+    // gameKey para quiz inclui a dificuldade
+    const gameKey = `quiz_${difficulty}`;
+    await saveScore(gameKey, {
       name: userData.name,
       turma: userData.turma,
-      score: score,
-      timeSpent: timeSpent,
-      date: new Date().toISOString(),
-      isRecent: true // Para destacar na UI
-    };
-    
-    cleanedRanking.push(newEntry);
-    localStorage.setItem("ai_quiz_ranking", JSON.stringify(cleanedRanking));
+      score,
+      timeSpent,
+      difficulty,
+    });
 
     setGameState("result");
   };
@@ -57,7 +57,7 @@ const QuizManager = () => {
   return (
     <section id="quiz-section" className="py-24 px-6 relative z-10 min-h-screen flex items-center justify-center">
       <div className="absolute inset-0 bg-primary/5 -z-10"></div>
-      
+
       <div className="w-full">
         <AnimatePresence mode="wait">
           {showAdmin ? (
@@ -65,25 +65,39 @@ const QuizManager = () => {
           ) : gameState === "login" && (
             <LoginScreen key="login" onStart={handleStart} />
           )}
-          
-          {gameState === "playing" && (
-            <Quiz key="quiz" onComplete={handleComplete} />
-          )}
-          
-          {gameState === "result" && (
-            <ResultScreen 
-              key="result" 
-              score={resultData.score} 
-              timeSpent={resultData.timeSpent}
-              total={10} 
-              onShowRanking={() => setGameState("ranking")} 
+
+          {gameState === "difficulty" && !showAdmin && (
+            <DifficultySelect
+              key="difficulty"
+              onSelect={handleSelectDifficulty}
+              onBack={() => setGameState("login")}
             />
           )}
 
-          {gameState === "ranking" && (
-            <RankingBoard 
-              key="ranking" 
-              onClose={() => setGameState("login")} 
+          {gameState === "playing" && !showAdmin && (
+            <Quiz
+              key={`quiz-${difficulty}`}
+              difficulty={difficulty}
+              onComplete={handleComplete}
+              onBack={() => setGameState("difficulty")}
+            />
+          )}
+
+          {gameState === "result" && !showAdmin && (
+            <ResultScreen
+              key="result"
+              score={resultData.score}
+              timeSpent={resultData.timeSpent}
+              total={10}
+              difficulty={difficulty}
+              onShowRanking={() => setGameState("ranking")}
+            />
+          )}
+
+          {gameState === "ranking" && !showAdmin && (
+            <RankingBoard
+              key="ranking"
+              onClose={() => setGameState("login")}
             />
           )}
         </AnimatePresence>

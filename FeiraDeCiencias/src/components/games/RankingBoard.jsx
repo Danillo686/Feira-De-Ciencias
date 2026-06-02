@@ -2,38 +2,39 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Medal, X } from "lucide-react";
 import { playClickSound } from "../../utils/sounds";
+import { listenRanking } from "../../firebase";
 
 const GAMES = [
-  { id: 'quiz', label: 'Quiz da IA' },
-  { id: 'memory', label: 'Jogo da Memória' },
-  { id: 'tf', label: 'Verdadeiro ou Falso' }
+  { id: 'quiz_easy', label: '🟢 Quiz Fácil' },
+  { id: 'quiz_medium', label: '🟡 Quiz Médio' },
+  { id: 'quiz_hard', label: '🔴 Quiz Difícil' },
+  { id: 'memory', label: '🎴 Memória' },
+  { id: 'scenarios', label: '🔍 Impacto da IA' },
 ];
 
 const RankingBoard = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState('quiz');
+  const [activeTab, setActiveTab] = useState('quiz_hard');
   const [ranking, setRanking] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    loadRanking(activeTab);
+    setLoading(true);
+    const unsubscribe = listenRanking(activeTab, (data) => {
+      setRanking(data);
+      setLoading(false);
+    });
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
   }, [activeTab]);
 
-  const loadRanking = (gameId) => {
-    const saved = JSON.parse(localStorage.getItem(`ai_ranking_${gameId}`) || "[]");
-    saved.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      if (a.timeSpent !== b.timeSpent) return (a.timeSpent || 999) - (b.timeSpent || 999);
-      return new Date(b.date) - new Date(a.date);
-    });
-    setRanking(saved.slice(0, 10));
-  };
-
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       className="max-w-3xl w-full mx-auto bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-md overflow-hidden relative"
     >
-      <button 
+      <button
         onClick={() => { playClickSound(); onClose(); }}
         className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-50 dark:bg-slate-700 rounded-full hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors z-10"
       >
@@ -41,16 +42,16 @@ const RankingBoard = ({ onClose }) => {
       </button>
 
       <div className="p-8 pb-4 text-center">
-        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Ranking Global</h2>
-        <p className="text-slate-500 dark:text-slate-400 mb-6">Top 10 Melhores Jogadores</p>
-        
+        <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">🏆 Ranking Global</h2>
+        <p className="text-slate-500 dark:text-slate-400 mb-5 text-sm">Top 15 Melhores Jogadores — atualizado em tempo real</p>
+
         {/* Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
+        <div className="flex flex-wrap justify-center gap-2 mb-2">
           {GAMES.map(game => (
             <button
               key={game.id}
               onClick={() => { playClickSound(); setActiveTab(game.id); }}
-              className={`px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
+              className={`px-3 py-1.5 rounded-lg font-medium transition-colors text-xs ${
                 activeTab === game.id
                   ? 'bg-slate-900 dark:bg-blue-600 text-white shadow-sm'
                   : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'
@@ -72,7 +73,14 @@ const RankingBoard = ({ onClose }) => {
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
             >
-              {ranking.length === 0 ? (
+              {loading ? (
+                <div className="flex items-center justify-center h-48">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                    <p className="text-sm text-slate-400">Carregando ranking...</p>
+                  </div>
+                </div>
+              ) : ranking.length === 0 ? (
                 <div className="flex items-center justify-center h-48">
                   <p className="text-center text-slate-500 dark:text-slate-400">Nenhum jogador registrado nesta modalidade ainda.</p>
                 </div>
@@ -85,12 +93,12 @@ const RankingBoard = ({ onClose }) => {
                     <div className="col-span-2 text-center">Tempo</div>
                     <div className="col-span-1 text-right">Pts</div>
                   </div>
-                  
+
                   {ranking.map((player, index) => {
                     let positionStyle = "text-slate-400";
                     let Icon = null;
                     let rowBg = "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700";
-                    
+
                     if (index === 0) {
                       positionStyle = "text-amber-500";
                       Icon = Trophy;
@@ -105,13 +113,12 @@ const RankingBoard = ({ onClose }) => {
                       rowBg = "bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700";
                     }
 
-                    if (player.isRecent) {
-                      rowBg = "bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 shadow-sm";
-                    }
-
                     return (
-                      <div 
-                        key={index}
+                      <motion.div
+                        key={player._key || player.playerId || index}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.04 }}
                         className={`grid grid-cols-12 gap-4 items-center px-4 py-3 rounded-lg transition-colors ${rowBg}`}
                       >
                         <div className={`col-span-2 text-center font-bold text-lg flex justify-center items-center gap-1 ${positionStyle}`}>
@@ -130,7 +137,7 @@ const RankingBoard = ({ onClose }) => {
                         <div className="col-span-1 text-right font-bold text-slate-900 dark:text-white">
                           {player.score}
                         </div>
-                      </div>
+                      </motion.div>
                     );
                   })}
                 </div>

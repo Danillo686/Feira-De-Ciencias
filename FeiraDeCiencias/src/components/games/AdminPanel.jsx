@@ -2,55 +2,50 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { X, Trash2, Edit2, Save, XCircle } from "lucide-react";
 import { playClickSound } from "../../utils/sounds";
+import { fetchRanking, deleteEntry, updateEntry, clearRanking } from "../../firebase";
 
 const GAMES = [
-  { id: 'quiz', label: 'Quiz da IA' },
-  { id: 'memory', label: 'Jogo da Memória' },
-  { id: 'tf', label: 'Verdadeiro ou Falso' }
+  { id: 'quiz_easy', label: '🟢 Quiz Fácil' },
+  { id: 'quiz_medium', label: '🟡 Quiz Médio' },
+  { id: 'quiz_hard', label: '🔴 Quiz Difícil' },
+  { id: 'memory', label: '🎴 Memória' },
+  { id: 'scenarios', label: '🔍 Impacto da IA' },
 ];
 
 const AdminPanel = ({ onClose }) => {
-  const [activeTab, setActiveTab] = useState('quiz');
+  const [activeTab, setActiveTab] = useState('quiz_hard');
   const [ranking, setRanking] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadRanking(activeTab);
   }, [activeTab]);
 
-  const loadRanking = (gameId) => {
-    const saved = JSON.parse(localStorage.getItem(`ai_ranking_${gameId}`) || "[]");
-    saved.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      if (a.timeSpent !== b.timeSpent) return (a.timeSpent || 999) - (b.timeSpent || 999);
-      return new Date(b.date) - new Date(a.date);
-    });
-    
-    const rankingWithIds = saved.map((item, index) => ({
-      ...item,
-      id: item.id || Date.now().toString() + index
-    }));
-    
-    setRanking(rankingWithIds);
+  const loadRanking = async (gameId) => {
+    setLoading(true);
+    try {
+      const data = await fetchRanking(gameId);
+      setRanking(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const saveToStorage = (newRanking) => {
-    localStorage.setItem(`ai_ranking_${activeTab}`, JSON.stringify(newRanking));
-    setRanking(newRanking);
-  };
-
-  const handleDelete = (id) => {
+  const handleDelete = async (player) => {
     playClickSound();
-    if (window.confirm("Tem certeza que deseja deletar este jogador?")) {
-      const newRanking = ranking.filter(p => p.id !== id);
-      saveToStorage(newRanking);
+    if (window.confirm(`Tem certeza que deseja deletar "${player.name}"?`)) {
+      await deleteEntry(activeTab, player._key || player.playerId);
+      await loadRanking(activeTab);
     }
   };
 
   const startEdit = (player) => {
     playClickSound();
-    setEditingId(player.id);
+    setEditingId(player._key || player.playerId);
     setEditForm({ ...player });
   };
 
@@ -60,62 +55,49 @@ const AdminPanel = ({ onClose }) => {
     setEditForm({});
   };
 
-  const saveEdit = () => {
+  const saveEdit = async () => {
     playClickSound();
-    const newRanking = ranking.map(p => {
-      if (p.id === editingId) {
-        return {
-          ...p,
-          name: editForm.name,
-          turma: editForm.turma,
-          score: parseInt(editForm.score) || 0,
-          timeSpent: parseInt(editForm.timeSpent) || 0
-        };
-      }
-      return p;
+    const id = editingId;
+    await updateEntry(activeTab, id, {
+      name: editForm.name,
+      turma: editForm.turma,
+      score: parseInt(editForm.score) || 0,
+      timeSpent: parseInt(editForm.timeSpent) || 0,
     });
-    
-    newRanking.sort((a, b) => {
-      if (b.score !== a.score) return b.score - a.score;
-      if (a.timeSpent !== b.timeSpent) return (a.timeSpent || 999) - (b.timeSpent || 999);
-      return new Date(b.date) - new Date(a.date);
-    });
-
-    saveToStorage(newRanking);
     setEditingId(null);
+    await loadRanking(activeTab);
   };
 
-  const clearAll = () => {
+  const handleClearAll = async () => {
     playClickSound();
-    if (window.confirm(`PERIGO: Tem certeza que deseja apagar TODOS os jogadores do ranking de ${GAMES.find(g => g.id === activeTab).label}?`)) {
-      saveToStorage([]);
+    const gameLabel = GAMES.find(g => g.id === activeTab)?.label || activeTab;
+    if (window.confirm(`PERIGO: Tem certeza que deseja apagar TODOS os jogadores do ranking de ${gameLabel}?`)) {
+      await clearRanking(activeTab);
+      await loadRanking(activeTab);
     }
   };
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="max-w-4xl w-full mx-auto bg-white rounded-2xl formal-border shadow-lg overflow-hidden relative"
+      className="max-w-4xl w-full mx-auto bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-lg overflow-hidden relative"
     >
-      <button 
-        onClick={() => {
-          playClickSound();
-          onClose();
-        }}
-        className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 bg-slate-50 rounded-full hover:bg-slate-100 transition-colors z-10"
+      <button
+        onClick={() => { playClickSound(); onClose(); }}
+        className="absolute top-4 right-4 p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white bg-slate-50 dark:bg-slate-700 rounded-full hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors z-10"
       >
         <X size={24} />
       </button>
 
-      <div className="p-8 pb-4 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="p-8 pb-4 border-b border-slate-100 dark:border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
         <div className="text-center md:text-left">
           <h2 className="text-3xl font-bold text-rose-600 mb-2">Painel de Administração</h2>
-          <p className="text-slate-500">Edite ou remova jogadores do ranking selecionado.</p>
+          <p className="text-slate-500 dark:text-slate-400">Edite ou remova jogadores do ranking selecionado.</p>
         </div>
-        
-        <button 
-          onClick={clearAll}
+
+        <button
+          onClick={handleClearAll}
           className="bg-rose-50 text-rose-600 border border-rose-200 hover:bg-rose-600 hover:text-white px-4 py-2 rounded-lg transition-colors font-medium flex items-center gap-2"
         >
           <Trash2 size={18} />
@@ -123,75 +105,80 @@ const AdminPanel = ({ onClose }) => {
         </button>
       </div>
 
-      <div className="px-8 py-4 bg-slate-50 border-b border-slate-200 flex flex-wrap justify-center md:justify-start gap-2">
+      <div className="px-8 py-4 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex flex-wrap justify-center md:justify-start gap-2">
         {GAMES.map(game => (
           <button
             key={game.id}
-            onClick={() => {
-              playClickSound();
-              setEditingId(null);
-              setActiveTab(game.id);
-            }}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors ${activeTab === game.id ? 'bg-slate-800 text-white shadow-sm' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'}`}
+            onClick={() => { playClickSound(); setEditingId(null); setActiveTab(game.id); }}
+            className={`px-3 py-1.5 rounded-lg font-medium transition-colors text-xs ${
+              activeTab === game.id
+                ? 'bg-slate-800 dark:bg-blue-600 text-white shadow-sm'
+                : 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600'
+            }`}
           >
             {game.label}
           </button>
         ))}
       </div>
 
-      <div className="p-8 max-h-[50vh] overflow-y-auto bg-white">
-        {ranking.length === 0 ? (
-          <p className="text-center text-slate-500 py-8">Nenhum jogador registrado neste jogo.</p>
+      <div className="p-8 max-h-[50vh] overflow-y-auto bg-white dark:bg-slate-800">
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="w-6 h-6 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+          </div>
+        ) : ranking.length === 0 ? (
+          <p className="text-center text-slate-500 dark:text-slate-400 py-8">Nenhum jogador registrado neste jogo.</p>
         ) : (
           <div className="w-full text-left text-sm">
-            <div className="grid grid-cols-12 gap-4 px-4 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider border-b border-slate-200 mb-2 bg-slate-50 rounded-t-lg">
+            <div className="grid grid-cols-12 gap-4 px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-slate-700 mb-2 bg-slate-50 dark:bg-slate-900 rounded-t-lg">
               <div className="col-span-3">Jogador</div>
               <div className="col-span-3">Turma</div>
               <div className="col-span-2 text-center">Pts</div>
               <div className="col-span-2 text-center">Tempo</div>
               <div className="col-span-2 text-right">Ações</div>
             </div>
-            
+
             <div className="space-y-2">
               {ranking.map((player) => {
-                const isEditing = editingId === player.id;
-                
+                const id = player._key || player.playerId;
+                const isEditing = editingId === id;
+
                 return (
-                  <div key={player.id} className="grid grid-cols-12 gap-4 items-center px-4 py-3 rounded-lg border border-slate-100 bg-white hover:border-slate-300 transition-colors">
+                  <div key={id} className="grid grid-cols-12 gap-4 items-center px-4 py-3 rounded-lg border border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
                     {isEditing ? (
                       <>
                         <div className="col-span-3">
-                          <input type="text" value={editForm.name} onChange={e => setEditForm({...editForm, name: e.target.value})} className="w-full bg-slate-50 border border-slate-300 rounded-md px-2 py-1 text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary" />
+                          <input type="text" value={editForm.name} onChange={e => setEditForm({ ...editForm, name: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md px-2 py-1 text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
                         </div>
                         <div className="col-span-3">
-                          <input type="text" value={editForm.turma} onChange={e => setEditForm({...editForm, turma: e.target.value})} className="w-full bg-slate-50 border border-slate-300 rounded-md px-2 py-1 text-slate-800 focus:outline-none focus:ring-1 focus:ring-primary" />
+                          <input type="text" value={editForm.turma} onChange={e => setEditForm({ ...editForm, turma: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md px-2 py-1 text-slate-800 dark:text-white text-sm focus:outline-none focus:ring-1 focus:ring-blue-500" />
                         </div>
                         <div className="col-span-2">
-                          <input type="number" value={editForm.score} onChange={e => setEditForm({...editForm, score: e.target.value})} className="w-full bg-slate-50 border border-slate-300 rounded-md px-2 py-1 text-slate-800 text-center focus:outline-none focus:ring-1 focus:ring-primary" />
+                          <input type="number" value={editForm.score} onChange={e => setEditForm({ ...editForm, score: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md px-2 py-1 text-slate-800 dark:text-white text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-500" />
                         </div>
                         <div className="col-span-2">
-                          <input type="number" value={editForm.timeSpent} onChange={e => setEditForm({...editForm, timeSpent: e.target.value})} className="w-full bg-slate-50 border border-slate-300 rounded-md px-2 py-1 text-slate-800 text-center focus:outline-none focus:ring-1 focus:ring-primary" />
+                          <input type="number" value={editForm.timeSpent} onChange={e => setEditForm({ ...editForm, timeSpent: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md px-2 py-1 text-slate-800 dark:text-white text-sm text-center focus:outline-none focus:ring-1 focus:ring-blue-500" />
                         </div>
                         <div className="col-span-2 flex justify-end gap-2">
-                          <button onClick={saveEdit} className="text-teal-600 hover:text-teal-700 p-1.5 bg-teal-50 rounded-md hover:bg-teal-100 transition-colors">
+                          <button onClick={saveEdit} className="text-teal-600 hover:text-teal-700 p-1.5 bg-teal-50 dark:bg-teal-900/30 rounded-md hover:bg-teal-100 transition-colors">
                             <Save size={18} />
                           </button>
-                          <button onClick={cancelEdit} className="text-slate-500 hover:text-slate-700 p-1.5 bg-slate-100 rounded-md hover:bg-slate-200 transition-colors">
+                          <button onClick={cancelEdit} className="text-slate-500 hover:text-slate-700 p-1.5 bg-slate-100 dark:bg-slate-700 rounded-md hover:bg-slate-200 transition-colors">
                             <XCircle size={18} />
                           </button>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="col-span-3 font-semibold text-slate-800 truncate">{player.name}</div>
-                        <div className="col-span-3 text-slate-500 truncate">{player.turma}</div>
-                        <div className="col-span-2 text-center font-bold text-primary">{player.score}</div>
-                        <div className="col-span-2 text-center font-medium text-slate-600">{player.timeSpent ? `${player.timeSpent}s` : '-'}</div>
+                        <div className="col-span-3 font-semibold text-slate-800 dark:text-slate-200 truncate">{player.name}</div>
+                        <div className="col-span-3 text-slate-500 dark:text-slate-400 truncate">{player.turma}</div>
+                        <div className="col-span-2 text-center font-bold text-blue-600 dark:text-blue-400">{player.score}</div>
+                        <div className="col-span-2 text-center font-medium text-slate-600 dark:text-slate-400">{player.timeSpent ? `${player.timeSpent}s` : '-'}</div>
                         <div className="col-span-2 flex justify-end gap-2">
-                          <button onClick={() => startEdit(player)} className="text-blue-600 hover:text-blue-700 p-1.5 bg-blue-50 rounded-md hover:bg-blue-100 transition-colors">
+                          <button onClick={() => startEdit(player)} className="text-blue-600 hover:text-blue-700 p-1.5 bg-blue-50 dark:bg-blue-900/30 rounded-md hover:bg-blue-100 transition-colors">
                             <Edit2 size={18} />
                           </button>
-                          <button onClick={() => handleDelete(player.id)} className="text-rose-600 hover:text-rose-700 p-1.5 bg-rose-50 rounded-md hover:bg-rose-100 transition-colors">
+                          <button onClick={() => handleDelete(player)} className="text-rose-600 hover:text-rose-700 p-1.5 bg-rose-50 dark:bg-rose-900/30 rounded-md hover:bg-rose-100 transition-colors">
                             <Trash2 size={18} />
                           </button>
                         </div>
