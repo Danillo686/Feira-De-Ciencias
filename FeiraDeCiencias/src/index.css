@@ -4,11 +4,11 @@
 
 @layer base {
   body {
-    @apply bg-background text-slate-800 font-sans overflow-x-hidden;
+    @apply bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 font-sans overflow-x-hidden transition-colors duration-300;
   }
 }
 
-/* Custom Scrollbar for a formal look */
+/* Custom Scrollbar - Light */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -26,8 +26,21 @@
   background: #94a3b8;
 }
 
+/* Custom Scrollbar - Dark */
+.dark ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
 .glass-panel {
-  @apply bg-white border border-slate-200 rounded-xl shadow-md;
+  @apply bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-md;
 }
 
 .text-gradient {
@@ -35,11 +48,11 @@
 }
 
 .formal-border {
-  @apply border border-slate-200 shadow-sm transition-all duration-300 hover:shadow-md hover:border-accent/30;
+  @apply border border-slate-200 dark:border-slate-700 shadow-sm transition-all duration-300 hover:shadow-md hover:border-accent/30;
 }
 
 .formal-text {
-  @apply font-semibold text-primary;
+  @apply font-semibold text-primary dark:text-white;
 }
 
 /* 3D Transform Utilities for Memory Game */

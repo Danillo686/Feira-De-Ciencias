@@ -9,7 +9,7 @@ const timelineEvents = [
 
 const FutureTimelineSection = () => {
   return (
-    <section className="py-24 px-6 relative z-10 bg-white">
+    <section className="py-24 px-6 relative z-10 bg-white dark:bg-slate-950 transition-colors duration-300">
       <div className="max-w-5xl mx-auto relative">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -17,17 +17,17 @@ const FutureTimelineSection = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="text-center mb-20"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 tracking-tight">
-            Projeções para o <span className="text-primary">Futuro</span>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white tracking-tight">
+            Projeções para o <span className="text-primary dark:text-blue-400">Futuro</span>
           </h2>
-          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
             As trajetórias prováveis da evolução da Inteligência Artificial e seus possíveis pontos de inflexão tecnológica.
           </p>
         </motion.div>
 
         <div className="relative">
           {/* Linha central */}
-          <div className="hidden md:block absolute left-[50%] top-0 bottom-0 w-[2px] bg-slate-200 -translate-x-[50%]"></div>
+          <div className="hidden md:block absolute left-[50%] top-0 bottom-0 w-[2px] bg-slate-200 dark:bg-slate-700 -translate-x-[50%]"></div>
 
           <div className="space-y-12 md:space-y-20">
             {timelineEvents.map((event, index) => {
@@ -40,7 +40,7 @@ const FutureTimelineSection = () => {
                     whileInView={{ scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: 0.2 }}
-                    className="hidden md:block absolute left-[50%] w-5 h-5 rounded-full bg-white border-[3px] border-primary -translate-x-[50%] z-10 shadow-sm"
+                    className="hidden md:block absolute left-[50%] w-5 h-5 rounded-full bg-white dark:bg-slate-950 border-[3px] border-primary dark:border-blue-500 -translate-x-[50%] z-10 shadow-sm"
                   ></motion.div>
 
                   {/* Conteúdo Esquerda */}
@@ -50,11 +50,11 @@ const FutureTimelineSection = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="bg-white formal-border p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm p-8 rounded-xl hover:shadow-md transition-shadow"
                       >
-                        <h3 className="text-sm font-bold text-accent uppercase tracking-widest mb-3">{event.year}</h3>
-                        <h4 className="text-2xl font-bold text-slate-900 mb-4">{event.title}</h4>
-                        <p className="text-slate-600 leading-relaxed">{event.desc}</p>
+                        <h3 className="text-sm font-bold text-accent dark:text-blue-400 uppercase tracking-widest mb-3">{event.year}</h3>
+                        <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{event.title}</h4>
+                        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{event.desc}</p>
                       </motion.div>
                     )}
                   </div>
@@ -66,11 +66,11 @@ const FutureTimelineSection = () => {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="bg-white formal-border p-8 rounded-xl shadow-sm hover:shadow-md transition-shadow"
+                        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm p-8 rounded-xl hover:shadow-md transition-shadow"
                       >
-                        <h3 className="text-sm font-bold text-secondary uppercase tracking-widest mb-3">{event.year}</h3>
-                        <h4 className="text-2xl font-bold text-slate-900 mb-4">{event.title}</h4>
-                        <p className="text-slate-600 leading-relaxed">{event.desc}</p>
+                        <h3 className="text-sm font-bold text-secondary dark:text-slate-400 uppercase tracking-widest mb-3">{event.year}</h3>
+                        <h4 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{event.title}</h4>
+                        <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{event.desc}</p>
                       </motion.div>
                     )}
                   </div>

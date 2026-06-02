@@ -12,7 +12,7 @@ const dangers = [
 
 const DangersSection = () => {
   return (
-    <section className="py-24 px-6 relative z-10 bg-slate-50 border-t border-slate-200">
+    <section className="py-24 px-6 relative z-10 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -20,13 +20,13 @@ const DangersSection = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center justify-center p-4 rounded-full bg-rose-50 text-rose-700 mb-6 border border-rose-100">
+          <div className="inline-flex items-center justify-center p-4 rounded-full bg-rose-50 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 mb-6 border border-rose-100 dark:border-rose-800">
             <AlertTriangle size={36} />
           </div>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 tracking-tight">
-            Desafios Éticos e <span className="text-rose-700">Riscos</span>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white tracking-tight">
+            Desafios Éticos e <span className="text-rose-700 dark:text-rose-400">Riscos</span>
           </h2>
-          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
             A inovação acelerada sem diretrizes regulatórias claras apresenta vulnerabilidades sistêmicas críticas para a sociedade contemporânea.
           </p>
         </motion.div>
@@ -41,13 +41,13 @@ const DangersSection = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
-                className="bg-white formal-border p-8 rounded-xl hover:border-rose-300 transition-colors"
+                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-8 rounded-xl hover:border-rose-300 dark:hover:border-rose-700 transition-colors shadow-sm"
               >
-                <div className="text-rose-700 mb-6 bg-rose-50 inline-block p-3 rounded-lg">
+                <div className="text-rose-700 dark:text-rose-400 mb-6 bg-rose-50 dark:bg-rose-900/30 inline-block p-3 rounded-lg">
                   <Icon size={28} />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-4">{danger.title}</h3>
-                <p className="text-slate-600 leading-relaxed text-sm">{danger.desc}</p>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{danger.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm">{danger.desc}</p>
               </motion.div>
             );
           })}

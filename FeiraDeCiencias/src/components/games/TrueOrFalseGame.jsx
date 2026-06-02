@@ -1,15 +1,69 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, X, ArrowLeft } from "lucide-react";
+import { Check, X, ArrowLeft, Brain } from "lucide-react";
 import { playClickSound, playSuccessSound } from "../../utils/sounds";
 
 const QUESTIONS = [
-  { id: 1, text: "A Inteligência Artificial pode sentir emoções verdadeiras como os humanos.", isTrue: false, explanation: "IAs apenas simulam empatia baseadas em padrões de texto, mas não têm sentimentos reais." },
-  { id: 2, text: "Existem IAs que conseguem diagnosticar certas doenças com mais precisão que médicos humanos.", isTrue: true, explanation: "Modelos de visão computacional têm demonstrado precisão superior na análise de exames como raios-X e ressonâncias." },
-  { id: 3, text: "Se uma IA cometer um crime, ela será presa e julgada no tribunal.", isTrue: false, explanation: "IAs não têm personalidade jurídica. A responsabilidade recai sobre os criadores ou usuários da ferramenta." },
-  { id: 4, text: "Já existem músicas criadas inteiramente por IA que fizeram sucesso nas plataformas de streaming.", isTrue: true, explanation: "Artistas e produtores já utilizam IA para gerar instrumentais e até emular vozes de cantores famosos." },
-  { id: 5, text: "A Inteligência Artificial vai inevitavelmente destruir todos os empregos humanos no futuro.", isTrue: false, explanation: "Embora a IA automatize tarefas e mude o mercado, ela também cria novas profissões e ferramentas que amplificam o trabalho humano." },
-  { id: 6, text: "Algoritmos de IA podem herdar preconceitos e vieses dos dados com os quais foram treinados.", isTrue: true, explanation: "Se os dados históricos tiverem viés (ex: racismo ou sexismo), a IA pode replicar e até amplificar esses comportamentos." }
+  {
+    id: 1,
+    text: "O modelo GPT-4 da OpenAI foi treinado com mais de 1 trilhão de parâmetros.",
+    isTrue: false,
+    explanation: "Embora a OpenAI não tenha divulgado o número oficial, estimativas técnicas apontam entre 170 e 220 bilhões de parâmetros — não 1 trilhão. Esse valor é frequentemente exagerado na mídia."
+  },
+  {
+    id: 2,
+    text: "Redes neurais convolucionais (CNNs) foram originalmente desenvolvidas para reconhecimento de imagens.",
+    isTrue: true,
+    explanation: "As CNNs foram concebidas por Yann LeCun para reconhecimento de dígitos escritos à mão (LeNet, 1998) e se tornaram o padrão em visão computacional."
+  },
+  {
+    id: 3,
+    text: "Uma IA com AGI (Inteligência Geral Artificial) já existe e opera em servidores secretos do governo.",
+    isTrue: false,
+    explanation: "Nenhum sistema de AGI foi criado até hoje. Toda IA atual é 'estreita' (Narrow AI) — especializada em tarefas específicas. AGI ainda é um objetivo de pesquisa, não uma realidade."
+  },
+  {
+    id: 4,
+    text: "O algoritmo AlphaFold da DeepMind resolveu um problema de 50 anos: prever a estrutura 3D de proteínas a partir de sua sequência de aminoácidos.",
+    isTrue: true,
+    explanation: "O AlphaFold 2 (2020) revolucionou a biologia computacional ao prever estruturas de proteínas com precisão atômica, acelerando pesquisas em medicina e desenvolvimento de fármacos."
+  },
+  {
+    id: 5,
+    text: "IAs treinadas apenas com dados de texto podem desenvolver capacidade de raciocínio matemático sem treinamento específico em matemática.",
+    isTrue: true,
+    explanation: "Modelos como GPT-4 demonstraram capacidade de raciocínio matemático emergente a partir de textos gerais. Isso sugere que a linguagem carrega estruturas lógicas que a IA absorve implicitamente."
+  },
+  {
+    id: 6,
+    text: "O conceito de 'backpropagation' (retropropagação) foi inventado nos anos 2010, com o surgimento das GPUs modernas.",
+    isTrue: false,
+    explanation: "O backpropagation foi formalizado por Rumelhart, Hinton e Williams em 1986. O que mudou nos anos 2010 foi o poder computacional das GPUs, que tornou prático treinar redes profundas."
+  },
+  {
+    id: 7,
+    text: "O problema da 'Caixa Preta' em IA refere-se ao fato de que, muitas vezes, é impossível compreender exatamente como um modelo chegou a uma decisão.",
+    isTrue: true,
+    explanation: "Redes neurais profundas com milhões de parâmetros são inerentemente opacas. A área de XAI (Explainable AI) busca criar métodos para interpretar essas decisões."
+  },
+  {
+    id: 8,
+    text: "Computadores quânticos já tornam todas as técnicas modernas de criptografia obsoletas.",
+    isTrue: false,
+    explanation: "Computadores quânticos atuais ainda são muito limitados (poucos qubits estáveis). Algoritmos como o de Shor poderiam quebrar RSA no futuro, mas ainda não existe um computador quântico poderoso o suficiente para isso."
+  },
+  {
+    id: 9,
+    text: "O famoso estudo 'Attention is All You Need' (2017) introduziu a arquitetura Transformer, que é a base dos LLMs modernos.",
+    isTrue: true,
+    explanation: "Publicado por pesquisadores do Google, o artigo substituiu as RNNs pelo mecanismo de Auto-Atenção, revolucionando NLP e permitindo modelos como BERT, GPT, Gemini e LLaMA."
+  },
+  {
+    id: 10,
+    text: "IAs generativas como DALL-E e Midjourney criam imagens 'do zero', sem nunca terem visto imagens humanas durante o treinamento.",
+    isTrue: false,
+    explanation: "Esses modelos são treinados em bilhões de pares imagem-texto coletados da internet. Eles aprendem padrões estatísticos desses dados — não criam do zero, mas recombinham o que aprenderam."
+  }
 ];
 
 const TrueOrFalseGame = ({ onComplete, onBack }) => {
@@ -25,16 +79,16 @@ const TrueOrFalseGame = ({ onComplete, onBack }) => {
 
   const handleAnswer = (answer) => {
     if (showExplanation) return;
-    
+
     playClickSound();
     const isCorrect = answer === QUESTIONS[currentQuestion].isTrue;
     setLastAnswerCorrect(isCorrect);
-    
+
     if (isCorrect) {
       playSuccessSound();
       setScore(s => s + 1);
     }
-    
+
     setShowExplanation(true);
   };
 
@@ -51,85 +105,112 @@ const TrueOrFalseGame = ({ onComplete, onBack }) => {
   };
 
   const q = QUESTIONS[currentQuestion];
+  const progress = (currentQuestion / QUESTIONS.length) * 100;
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-3xl w-full mx-auto bg-white rounded-2xl formal-border shadow-sm overflow-hidden"
+      className="max-w-3xl w-full mx-auto bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
     >
-      <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
-        <button 
-          onClick={() => {
-            playClickSound();
-            onBack();
-          }}
-          className="flex items-center text-slate-500 hover:text-slate-800 transition-colors"
+      {/* Header */}
+      <div className="p-5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
+        <button
+          onClick={() => { playClickSound(); onBack(); }}
+          className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors text-sm font-medium"
         >
-          <ArrowLeft size={20} className="mr-2" />
+          <ArrowLeft size={18} />
           Voltar
         </button>
-        <div className="text-right">
-          <p className="text-sm font-medium text-slate-500">Questão <span className="text-primary font-bold">{currentQuestion + 1}</span> de {QUESTIONS.length}</p>
+
+        <div className="flex items-center gap-3">
+          <div className="text-right">
+            <p className="text-xs text-slate-400 dark:text-slate-500">Questão</p>
+            <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
+              {currentQuestion + 1} / {QUESTIONS.length}
+            </p>
+          </div>
+          <div className="flex items-center gap-1.5 bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm font-bold">
+            <Brain size={14} />
+            {score} pts
+          </div>
         </div>
       </div>
 
+      {/* Progress bar */}
+      <div className="h-1 bg-slate-200 dark:bg-slate-700">
+        <motion.div
+          className="h-1 bg-blue-600"
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.4 }}
+        />
+      </div>
+
+      {/* Content */}
       <div className="p-8 md:p-12">
         <div className="text-center mb-10">
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Isso é IA?</h2>
-          <p className="text-2xl md:text-3xl font-semibold text-slate-800 leading-relaxed min-h-[120px] flex items-center justify-center">
+          <h2 className="text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-5">
+            Verdadeiro ou Falso? • Nível Avançado
+          </h2>
+          <p className="text-xl md:text-2xl font-semibold text-slate-800 dark:text-slate-100 leading-relaxed min-h-[100px] flex items-center justify-center">
             "{q.text}"
           </p>
         </div>
 
         <AnimatePresence mode="wait">
           {!showExplanation ? (
-            <motion.div 
+            <motion.div
               key="buttons"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <button 
+              <button
                 onClick={() => handleAnswer(true)}
-                className="flex-1 py-4 px-6 bg-teal-50 border border-teal-200 text-teal-700 hover:bg-teal-600 hover:text-white rounded-xl font-bold text-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                className="flex-1 py-5 px-6 bg-emerald-50 dark:bg-emerald-900/20 border-2 border-emerald-200 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500 dark:hover:bg-emerald-600 hover:text-white hover:border-emerald-500 dark:hover:border-emerald-600 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-sm"
               >
-                <Check size={24} />
+                <Check size={26} />
                 Verdadeiro
               </button>
-              <button 
+              <button
                 onClick={() => handleAnswer(false)}
-                className="flex-1 py-4 px-6 bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-600 hover:text-white rounded-xl font-bold text-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
+                className="flex-1 py-5 px-6 bg-rose-50 dark:bg-rose-900/20 border-2 border-rose-200 dark:border-rose-700 text-rose-700 dark:text-rose-400 hover:bg-rose-500 dark:hover:bg-rose-600 hover:text-white hover:border-rose-500 dark:hover:border-rose-600 rounded-2xl font-bold text-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-sm"
               >
-                <X size={24} />
+                <X size={26} />
                 Falso
               </button>
             </motion.div>
           ) : (
-            <motion.div 
+            <motion.div
               key="explanation"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`p-6 rounded-xl border ${lastAnswerCorrect ? 'bg-green-50 border-green-200 text-green-900' : 'bg-red-50 border-red-200 text-red-900'}`}
+              className={`p-6 rounded-2xl border-2 ${
+                lastAnswerCorrect
+                  ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-300 dark:border-emerald-700"
+                  : "bg-red-50 dark:bg-red-900/20 border-red-300 dark:border-red-700"
+              }`}
             >
               <div className="flex items-center gap-3 mb-3">
-                <div className={`p-2 rounded-full ${lastAnswerCorrect ? 'bg-green-200 text-green-700' : 'bg-red-200 text-red-700'}`}>
-                  {lastAnswerCorrect ? <Check size={24} /> : <X size={24} />}
+                <div className={`p-2 rounded-full ${lastAnswerCorrect ? "bg-emerald-200 dark:bg-emerald-800 text-emerald-700 dark:text-emerald-300" : "bg-red-200 dark:bg-red-800 text-red-700 dark:text-red-300"}`}>
+                  {lastAnswerCorrect ? <Check size={22} /> : <X size={22} />}
                 </div>
-                <h3 className="text-xl font-bold">
-                  {lastAnswerCorrect ? "Correto!" : "Incorreto!"}
+                <h3 className={`text-xl font-bold ${lastAnswerCorrect ? "text-emerald-800 dark:text-emerald-300" : "text-red-800 dark:text-red-300"}`}>
+                  {lastAnswerCorrect ? "Correto! 🎯" : "Incorreto! 💡"}
                 </h3>
               </div>
-              <p className="text-lg opacity-90 mb-6">{q.explanation}</p>
-              
+              <p className={`text-base leading-relaxed mb-6 ${lastAnswerCorrect ? "text-emerald-900 dark:text-emerald-200" : "text-red-900 dark:text-red-200"}`}>
+                {q.explanation}
+              </p>
+
               <div className="text-center">
-                <button 
+                <button
                   onClick={handleNext}
-                  className="px-8 py-3 bg-slate-800 text-white rounded-lg font-medium hover:bg-slate-700 transition-colors shadow-sm"
+                  className="px-8 py-3 bg-slate-900 dark:bg-slate-200 text-white dark:text-slate-900 rounded-xl font-bold hover:bg-slate-700 dark:hover:bg-white transition-colors shadow-sm"
                 >
-                  {currentQuestion < QUESTIONS.length - 1 ? "Próxima Questão" : "Ver Resultado"}
+                  {currentQuestion < QUESTIONS.length - 1 ? "Próxima Questão →" : "Ver Resultado 🏆"}
                 </button>
               </div>
             </motion.div>

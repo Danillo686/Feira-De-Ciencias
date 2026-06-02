@@ -63,12 +63,11 @@ const MemoryGame = ({ onComplete, onBack }) => {
     if (solved.length === cards.length && cards.length > 0) {
       const timeSpent = Math.floor((Date.now() - startTime) / 1000);
       
-      // Calculate score based on moves and time (Max 100)
       const optimalMoves = 6;
       const penaltyMoves = Math.max(0, moves - optimalMoves) * 5;
       const penaltyTime = Math.max(0, timeSpent - 20) * 1;
       let finalScore = 100 - penaltyMoves - penaltyTime;
-      if (finalScore < 10) finalScore = 10; // Minimum score
+      if (finalScore < 10) finalScore = 10;
       
       setTimeout(() => {
         onComplete({ score: Math.floor(finalScore), timeSpent });
@@ -81,28 +80,27 @@ const MemoryGame = ({ onComplete, onBack }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="max-w-4xl w-full mx-auto bg-white rounded-2xl formal-border shadow-sm overflow-hidden"
+      className="max-w-4xl w-full mx-auto bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden"
     >
-      <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+      <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-slate-50 dark:bg-slate-900">
         <button 
-          onClick={() => {
-            playClickSound();
-            onBack();
-          }}
-          className="flex items-center text-slate-500 hover:text-slate-800 transition-colors"
+          onClick={() => { playClickSound(); onBack(); }}
+          className="flex items-center text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors"
         >
           <ArrowLeft size={20} className="mr-2" />
           Voltar
         </button>
         <div className="text-right">
-          <p className="text-sm text-slate-500">Movimentos: <span className="font-bold text-slate-800">{moves}</span></p>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Movimentos: <span className="font-bold text-slate-800 dark:text-white">{moves}</span>
+          </p>
         </div>
       </div>
 
       <div className="p-8">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-slate-900 mb-2">Jogo da Memória</h2>
-          <p className="text-slate-600">Encontre os pares de conceitos relacionados à IA.</p>
+          <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Jogo da Memória</h2>
+          <p className="text-slate-600 dark:text-slate-400">Encontre os pares de conceitos relacionados à IA.</p>
         </div>
 
         <div className="grid grid-cols-3 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
@@ -121,15 +119,19 @@ const MemoryGame = ({ onComplete, onBack }) => {
                   className="w-full h-full relative preserve-3d cursor-pointer duration-500"
                   animate={{ rotateY: isFlipped ? 180 : 0 }}
                 >
-                  {/* Frente (costas da carta) */}
-                  <div className="absolute w-full h-full backface-hidden bg-primary text-white rounded-xl shadow-sm flex items-center justify-center border-2 border-primary/20 hover:bg-primary/90 transition-colors">
-                    <span className="text-4xl opacity-50">?</span>
+                  {/* Front (card back) */}
+                  <div className="absolute w-full h-full backface-hidden bg-slate-900 dark:bg-blue-700 text-white rounded-xl shadow-sm flex items-center justify-center hover:bg-slate-700 dark:hover:bg-blue-600 transition-colors">
+                    <span className="text-4xl opacity-40">?</span>
                   </div>
 
-                  {/* Verso (face da carta) */}
-                  <div className={`absolute w-full h-full backface-hidden rounded-xl shadow-sm flex flex-col items-center justify-center border-2 border-slate-200 bg-white transform rotate-y-180 ${isSolved ? 'opacity-50 ring-2 ring-green-500 border-green-500' : ''}`}>
-                    <Icon size={32} className={`mb-2 ${isSolved ? 'text-green-500' : 'text-primary'}`} />
-                    <span className="text-xs font-semibold text-center text-slate-700 px-1">{card.label}</span>
+                  {/* Back (card face) */}
+                  <div className={`absolute w-full h-full backface-hidden rounded-xl shadow-sm flex flex-col items-center justify-center border-2 bg-white dark:bg-slate-700 transform rotate-y-180 ${
+                    isSolved
+                      ? 'opacity-60 ring-2 ring-emerald-500 border-emerald-500 dark:border-emerald-500'
+                      : 'border-slate-200 dark:border-slate-600'
+                  }`}>
+                    <Icon size={32} className={`mb-2 ${isSolved ? 'text-emerald-500' : 'text-slate-800 dark:text-white'}`} />
+                    <span className="text-xs font-semibold text-center text-slate-700 dark:text-slate-200 px-1">{card.label}</span>
                   </div>
                 </motion.div>
               </div>

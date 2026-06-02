@@ -68,7 +68,7 @@ const GamesManager = () => {
   };
 
   return (
-    <section id="games-section" className="py-24 px-6 relative z-10 min-h-screen flex items-center justify-center bg-slate-50 border-t border-slate-200">
+    <section id="games-section" className="py-24 px-6 relative z-10 min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 transition-colors duration-300">
       
       <div className="w-full max-w-5xl mx-auto">
         <AnimatePresence mode="wait">
@@ -84,51 +84,51 @@ const GamesManager = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="bg-white p-8 rounded-2xl formal-border shadow-sm max-w-4xl mx-auto"
+              className="bg-white dark:bg-slate-800 p-8 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm max-w-4xl mx-auto"
             >
               <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-slate-900 mb-2">Bem-vindo, {userData?.name}!</h2>
-                <p className="text-slate-600">Escolha um dos jogos abaixo para testar seus conhecimentos e concorrer no Top Global.</p>
+                <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Bem-vindo, {userData?.name}!</h2>
+                <p className="text-slate-600 dark:text-slate-400">Escolha um dos jogos abaixo para testar seus conhecimentos e concorrer no Top Global.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div 
                   onClick={() => selectGame('quiz')}
-                  className="p-6 border border-slate-200 rounded-xl hover:border-primary hover:shadow-md transition-all cursor-pointer bg-slate-50 text-center"
+                  className="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all cursor-pointer bg-slate-50 dark:bg-slate-900 text-center group"
                 >
                   <div className="text-4xl mb-4">🧠</div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">Quiz da IA</h3>
-                  <p className="text-sm text-slate-600 mb-4">10 perguntas para testar o que você aprendeu nas seções.</p>
-                  <button className="text-primary font-semibold">Jogar Agora &rarr;</button>
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Quiz da IA</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">10 perguntas avançadas sobre conceitos e tecnologias de IA.</p>
+                  <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm group-hover:underline">Jogar Agora &rarr;</span>
                 </div>
 
                 <div 
                   onClick={() => selectGame('memory')}
-                  className="p-6 border border-slate-200 rounded-xl hover:border-primary hover:shadow-md transition-all cursor-pointer bg-slate-50 text-center"
+                  className="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all cursor-pointer bg-slate-50 dark:bg-slate-900 text-center group"
                 >
                   <div className="text-4xl mb-4">🎴</div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">Jogo da Memória</h3>
-                  <p className="text-sm text-slate-600 mb-4">Encontre os pares de conceitos relacionados à Inteligência Artificial.</p>
-                  <button className="text-primary font-semibold">Jogar Agora &rarr;</button>
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Jogo da Memória</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">Encontre os pares de conceitos relacionados à Inteligência Artificial.</p>
+                  <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm group-hover:underline">Jogar Agora &rarr;</span>
                 </div>
 
                 <div 
                   onClick={() => selectGame('tf')}
-                  className="p-6 border border-slate-200 rounded-xl hover:border-primary hover:shadow-md transition-all cursor-pointer bg-slate-50 text-center"
+                  className="p-6 border border-slate-200 dark:border-slate-600 rounded-xl hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all cursor-pointer bg-slate-50 dark:bg-slate-900 text-center group"
                 >
                   <div className="text-4xl mb-4">⚖️</div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">Verdadeiro ou Falso?</h3>
-                  <p className="text-sm text-slate-600 mb-4">Identifique quais afirmações sobre IA são reais ou apenas mitos.</p>
-                  <button className="text-primary font-semibold">Jogar Agora &rarr;</button>
+                  <h3 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Verdadeiro ou Falso?</h3>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">10 afirmações avançadas sobre IA: mitos vs realidade.</p>
+                  <span className="text-blue-600 dark:text-blue-400 font-semibold text-sm group-hover:underline">Jogar Agora &rarr;</span>
                 </div>
               </div>
               
               <div className="mt-8 text-center">
                 <button 
                   onClick={() => setGameState('ranking')}
-                  className="px-6 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 font-medium"
+                  className="px-6 py-2 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 rounded-lg hover:bg-slate-700 dark:hover:bg-white font-medium transition-colors"
                 >
-                  Ver Ranking Global
+                  🏆 Ver Ranking Global
                 </button>
               </div>
             </motion.div>

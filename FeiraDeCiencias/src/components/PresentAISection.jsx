@@ -19,7 +19,7 @@ const PresentAISection = () => {
   const [activeId, setActiveId] = useState(null);
 
   return (
-    <section id="present-ai" className="py-24 px-6 relative z-10 bg-slate-50">
+    <section id="present-ai" className="py-24 px-6 relative z-10 bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -27,10 +27,10 @@ const PresentAISection = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 tracking-tight">
-            A Presença Atual da <span className="text-primary">IA</span>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white tracking-tight">
+            A Presença Atual da <span className="text-primary dark:text-blue-400">IA</span>
           </h2>
-          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
             A Inteligência Artificial já deixou de ser ficção científica e atua silenciosamente nos bastidores das nossas interações tecnológicas diárias.
           </p>
         </motion.div>
@@ -51,13 +51,20 @@ const PresentAISection = () => {
                   playClickSound();
                   setActiveId(isActive ? null : app.id);
                 }}
-                className={`bg-white border border-slate-200 rounded-xl p-6 cursor-pointer transition-all duration-300 shadow-sm ${isActive ? 'ring-2 ring-primary/20 shadow-md border-primary/40' : 'hover:shadow-md hover:border-slate-300'}`}
+                className={`
+                  bg-white dark:bg-slate-800
+                  border rounded-xl p-6 cursor-pointer transition-all duration-300 shadow-sm
+                  ${isActive
+                    ? 'ring-2 ring-blue-500/30 shadow-md border-blue-400 dark:border-blue-500'
+                    : 'border-slate-200 dark:border-slate-700 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-500'
+                  }
+                `}
               >
                 <div className="flex items-center gap-4 mb-2">
-                  <div className="p-3 rounded-lg bg-slate-100 text-slate-700">
+                  <div className="p-3 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200">
                     <Icon size={24} />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-800">{app.title}</h3>
+                  <h3 className="text-lg font-semibold text-slate-800 dark:text-white">{app.title}</h3>
                 </div>
                 
                 <AnimatePresence>
@@ -68,7 +75,7 @@ const PresentAISection = () => {
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <p className="text-slate-600 mt-4 text-sm leading-relaxed">
+                      <p className="text-slate-600 dark:text-slate-400 mt-4 text-sm leading-relaxed">
                         {app.desc}
                       </p>
                     </motion.div>
@@ -78,7 +85,7 @@ const PresentAISection = () => {
                       exit={{ opacity: 0 }}
                       className="mt-4"
                     >
-                      <p className="text-primary text-sm font-medium flex items-center gap-1">
+                      <p className="text-blue-600 dark:text-blue-400 text-sm font-medium flex items-center gap-1">
                         Ler mais
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

@@ -11,7 +11,7 @@ const benefits = [
 
 const BenefitsSection = () => {
   return (
-    <section className="py-24 px-6 relative z-10 bg-white">
+    <section className="py-24 px-6 relative z-10 bg-white dark:bg-slate-950 transition-colors duration-300">
       <div className="max-w-5xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -19,10 +19,10 @@ const BenefitsSection = () => {
           viewport={{ once: true, margin: "-100px" }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 tracking-tight">
-            Impactos Positivos na <span className="text-primary">Sociedade</span>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6 text-slate-900 dark:text-white tracking-tight">
+            Impactos Positivos na <span className="text-primary dark:text-blue-400">Sociedade</span>
           </h2>
-          <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-3xl mx-auto leading-relaxed">
             Quando aplicada com ética e responsabilidade, a IA atua como um amplificador das capacidades humanas.
           </p>
         </motion.div>
@@ -37,23 +37,23 @@ const BenefitsSection = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1, duration: 0.6 }}
-                className="bg-white formal-border rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8"
+                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 shadow-sm rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 transition-colors"
               >
                 <div className={`p-4 rounded-xl ${item.color} text-white shadow-md flex-shrink-0`}>
                   <Icon size={32} />
                 </div>
                 
                 <div className="flex-1 w-full text-center md:text-left">
-                  <h3 className="text-xl font-bold mb-3 text-slate-900">{item.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-xl font-bold mb-3 text-slate-900 dark:text-white">{item.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{item.desc}</p>
                 </div>
 
-                <div className="w-full md:w-1/3 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                <div className="w-full md:w-1/3 bg-slate-50 dark:bg-slate-900 p-4 rounded-lg border border-slate-100 dark:border-slate-700">
                   <div className="flex justify-between mb-2">
-                    <span className="text-sm font-semibold text-slate-600 uppercase tracking-wider">Aumento Estimado*</span>
-                    <span className="text-sm font-bold text-slate-900">{item.stat}%</span>
+                    <span className="text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider">Aumento Estimado*</span>
+                    <span className="text-sm font-bold text-slate-900 dark:text-white">{item.stat}%</span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                  <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5 overflow-hidden">
                     <motion.div 
                       className={`h-2.5 rounded-full ${item.color}`}
                       initial={{ width: 0 }}
@@ -67,7 +67,7 @@ const BenefitsSection = () => {
             );
           })}
         </div>
-        <p className="text-center text-sm text-slate-500 mt-10">*Estimativas representativas baseadas em estudos recentes de adoção tecnológica.</p>
+        <p className="text-center text-sm text-slate-500 dark:text-slate-500 mt-10">*Estimativas representativas baseadas em estudos recentes de adoção tecnológica.</p>
       </div>
     </section>
   );
