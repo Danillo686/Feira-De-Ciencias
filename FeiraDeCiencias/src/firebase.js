@@ -78,7 +78,7 @@ export const listenRanking = (gameKey, callback) => {
       if ((a.timeSpent || 9999) !== (b.timeSpent || 9999)) return (a.timeSpent || 9999) - (b.timeSpent || 9999);
       return new Date(b.date) - new Date(a.date);
     });
-    callback(list.slice(0, 15));
+    callback(list.slice(0, 500));
   });
   return unsubscribe;
 };
@@ -147,7 +147,7 @@ const getRankingLocal = (gameKey) => {
     if ((a.timeSpent || 9999) !== (b.timeSpent || 9999)) return (a.timeSpent || 9999) - (b.timeSpent || 9999);
     return new Date(b.date) - new Date(a.date);
   });
-  return list.slice(0, 15);
+  return list.slice(0, 500);
 };
 
 const deleteEntryLocal = (gameKey, playerId) => {

@@ -16,6 +16,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
+        serif: ['Lora', 'Georgia', 'serif'],
+        display: ['Playfair Display', 'serif'],
       }
     },
   },

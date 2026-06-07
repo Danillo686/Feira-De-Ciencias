@@ -13,12 +13,14 @@ const ResultScreen = ({ score, total, timeSpent, onShowRanking, onBackToMenu }) 
   let colorClass = "";
   let bgClass = "";
 
-  if (score <= 4) {
+  const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
+
+  if (percentage <= 40) {
     title = "Iniciante da IA";
     icon = <Star size={64} className="text-slate-400" />;
     colorClass = "from-slate-600 to-slate-400";
     bgClass = "from-slate-500/10 to-slate-400/5";
-  } else if (score <= 7) {
+  } else if (percentage <= 70) {
     title = "Explorador da IA";
     icon = <Medal size={64} className="text-blue-400" />;
     colorClass = "from-blue-600 to-blue-400";
@@ -29,8 +31,6 @@ const ResultScreen = ({ score, total, timeSpent, onShowRanking, onBackToMenu }) 
     colorClass = "from-yellow-500 to-amber-400";
     bgClass = "from-yellow-500/10 to-amber-400/5";
   }
-
-  const percentage = Math.round((score / total) * 100);
 
   return (
     <motion.div 

@@ -46,7 +46,7 @@ const difficulties = [
   },
 ];
 
-const DifficultySelect = ({ onSelect, onBack }) => {
+const DifficultySelect = ({ onSelect, onBack, title = "Escolha a Dificuldade", subtitle = "Cada nível possui uma pontuação e ranking próprios." }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -55,12 +55,12 @@ const DifficultySelect = ({ onSelect, onBack }) => {
       transition={{ duration: 0.4 }}
       className="max-w-2xl w-full mx-auto"
     >
-      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-xl overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-xl overflow-hidden font-['Inter']">
         {/* Header */}
         <div className="bg-slate-900 dark:bg-slate-950 px-8 pt-10 pb-8 text-center">
-          <div className="text-5xl mb-4">🧠</div>
-          <h2 className="text-2xl font-bold text-white mb-2">Escolha a Dificuldade</h2>
-          <p className="text-slate-400 text-sm">Cada nível tem 10 perguntas e um ranking próprio.</p>
+          <div className="text-5xl mb-4">🎮</div>
+          <h2 className="text-2xl font-bold text-white mb-2">{title}</h2>
+          <p className="text-slate-400 text-sm">{subtitle}</p>
         </div>
 
         <div className="p-6 space-y-4">
@@ -80,9 +80,6 @@ const DifficultySelect = ({ onSelect, onBack }) => {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-3 mb-1 flex-wrap">
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white">{d.label}</h3>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${d.badgeBg}`}>
-                      {d.questions} perguntas
-                    </span>
                   </div>
                   <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-0.5">{d.description}</p>
                   <p className="text-xs text-slate-500 dark:text-slate-400">{d.detail}</p>
